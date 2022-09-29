@@ -72,7 +72,10 @@ def add_movie():
 def movie(_id:str):
     movie_data = current_app.db.movies.find_one({"_id":_id})
     movie = Movie(**movie_data)
-    video_link_embedded = movie.video_link.replace('watch?v=','embed/')
+    if movie.video_link:
+        video_link_embedded = movie.video_link.replace('watch?v=','embed/')
+    else:
+        video_link_embedded =""
     return render_template("movie_details.html", movie = movie, video_link_embedded = video_link_embedded)
 
 @pages.get('/toggle-theme')
