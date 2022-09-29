@@ -72,7 +72,8 @@ def add_movie():
 def movie(_id:str):
     movie_data = current_app.db.movies.find_one({"_id":_id})
     movie = Movie(**movie_data)
-    return render_template("movie_details.html", movie = movie)
+    video_link_embedded = movie.video_link.replace('watch?v=','embed/')
+    return render_template("movie_details.html", movie = movie, video_link_embedded = video_link_embedded)
 
 @pages.get('/toggle-theme')
 def toggle_theme():
@@ -106,6 +107,9 @@ def edit_movie(_id:str):
     movie = Movie(**current_app.db.movies.find_one({"_id":_id}))
     form = ExtendeMovieForm(obj=movie)
     if form.validate_on_submit():
+        movie.title = form.title.data
+        movie.director = form.director.data
+        movie.year = form.year.data
         movie.cast = form.cast.data
         movie.series = form.series.data
         movie.tags = form.tags.data
